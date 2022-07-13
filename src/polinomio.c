@@ -63,14 +63,106 @@ Polinomio soma(Polinomio p, Polinomio q){
 
   if(p->exp < q->exp){
     head = cria_monomio(p->coef, p->exp);
+    p = p->prox;
   }else if(p->exp > q->exp){
     head = cria_monomio(q->coef, q->exp);
+    q = q->prox;
   }else{
-    head = cria_monomio(q->coef + p->coef, q->exp);
+    head = cria_monomio(p->coef + q->coef, q->exp);
+    p = p->prox;
+    q = q->prox;
   }
-  
+
   ptr = head;
 
+  while(p && q){
+
+    while(p && q && p->exp < q->exp){
+      ptr->prox = cria_monomio(p->coef, p->exp);
+      ptr = ptr->prox;
+      p = p->prox;
+    }
+    while(p && q && q->exp < p->exp){
+      ptr->prox = cria_monomio(q->coef, q->exp);
+      ptr = ptr->prox;
+      q = q->prox;
+    }
+
+    if(p && q && p->exp == q->exp){
+      ptr->prox = cria_monomio(p->coef + q->coef, q->exp);
+      ptr = ptr->prox;
+      p = p->prox;
+      q = q->prox;
+    }
+  }
+
+  if(p)
+    ptr->prox = copia(p); 
+  if(q)
+    ptr->prox = copia(q);
+  
+
+  return head;
+}
+
+Polinomio subtrai(Polinomio p, Polinomio q){
+
+  if(!p || !q){
+    if(p)
+      return p;
+    
+    if(q)
+      return q;
+
+    return NULL;
+  }
+
+  Polinomio head;
+  Polinomio ptr;
+
+  if(p->exp < q->exp){
+    head = cria_monomio(p->coef, p->exp);
+    p = p->prox;
+  }else if(p->exp > q->exp){
+    head = cria_monomio(q->coef * -1, q->exp);
+    q = q->prox;
+  }else{
+    head = cria_monomio(p->coef - q->coef, q->exp);
+    p = p->prox;
+    q = q->prox;
+  }
+
+  ptr = head;
+
+  while(p && q){
+
+    while(p && q && p->exp < q->exp){
+      ptr->prox = cria_monomio(p->coef, p->exp);
+      ptr = ptr->prox;
+      p = p->prox;
+    }
+    while(p && q && q->exp < p->exp){
+      ptr->prox = cria_monomio(q->coef * -1, q->exp);
+      ptr = ptr->prox;
+      q = q->prox;
+    }
+
+    if(p && q && p->exp == q->exp){
+      ptr->prox = cria_monomio(p->coef - q->coef, q->exp);
+      ptr = ptr->prox;
+      p = p->prox;
+      q = q->prox;
+    }
+  }
+
+  if(p)
+    ptr->prox = copia(p); 
+  if(q)
+    while(q){
+      ptr->prox =cria_monomio(q->coef * -1, q->exp); 
+      ptr = ptr->prox;
+      q = q->prox;
+    }
 
   return head;
 }

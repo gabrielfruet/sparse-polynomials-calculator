@@ -4,9 +4,9 @@
 
 int main(){
 
-  Polinomio a = cria_monomio(5, 1);
+  Polinomio a = cria_monomio(5, 2);
   Polinomio b = cria_monomio(3, 2);
-  Polinomio c = cria_monomio(2.33, 7);
+  Polinomio c = cria_monomio(2.33, 17);
   Polinomio d = cria_monomio(-22873, 17); 
   Polinomio e = soma(a,b);
   Polinomio f = soma(c,d);
