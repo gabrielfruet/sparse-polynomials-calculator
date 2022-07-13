@@ -1,6 +1,8 @@
 #ifndef __POLINOMIO_H__
 #include <stdio.h>
 
+void libera_lista();
+
 typedef struct termo *Polinomio;
 //Cria um novo monômio (um polinômio com um só termo) cujo coeficiente é coef e cujo expoente é exp e devolve o monômio criado. Caso o parâmetro coef seja igual a zero, esta função cria um polinômio nulo (um polinômio que não possui nenhum termo com coeficiente não nulo) e devolve o polinômio nulo criado.
 Polinomio cria_monomio(double coef, int exp);
