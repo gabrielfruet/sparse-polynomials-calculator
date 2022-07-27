@@ -50,6 +50,14 @@ void libera_lista(){
   }
 }
 
+static void imprime_polinomio_debug(Polinomio p){
+  while(p->prox){
+    printf("{ coef = %lf, exp = %d, prox = %p } -> \n", p->coef, p->exp, p->prox);
+    p = p->prox;
+  }
+  printf("NULL\n");
+}
+
 //HANDLERS
 static void inverte_sinal(Polinomio p){
   while(p){
@@ -73,6 +81,9 @@ static void libera_polinomios(Polinomio v[], int n){
   }
 }
 static Polinomio multiplica_por_monomio(Polinomio p, double coef, int exp){
+  if(coef == 0.0){
+    return NULL;
+  }
 
   Polinomio head = cria_monomio(p->coef * coef, p->exp + exp);
   Polinomio ptr = head;
@@ -224,7 +235,8 @@ Polinomio divide(Polinomio p, Polinomio q){
   Polinomio quociente = NULL;
   Polinomio subtrair = NULL;
   Polinomio adiciona_quociente = NULL;
-  int coef, exp;
+  double coef;
+  int exp;
 
   do{
     coef = dividendo->coef/divisor->coef;
@@ -254,7 +266,8 @@ Polinomio resto(Polinomio p, Polinomio q){
   Polinomio resto = copia(p);
   Polinomio divisor = q;
   Polinomio subtrair = NULL;
-  int coef, exp;
+  double coef;
+  int exp;
 
   do{
     coef = resto->coef/divisor->coef;
