@@ -3,9 +3,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#define LOG_BYTES_FILE "./bytes.log"
 #define SOMA 1
 #define SUBTRAI -1
-
 
 typedef struct termo{
   double coef;
@@ -14,9 +14,21 @@ typedef struct termo{
 }Termo;
 
 size_t bytes_alocados = 0;
+size_t bytes_livres = 0;
 
 static Termo *lista_livre = NULL;
 
+int totalBytes(Polinomio pols[23]){
+  int bytes = 0, i;
+  for(i = 0; i < 23; i++){
+    Polinomio ptr = pols[i];
+    while(ptr){
+      bytes += sizeof(Termo);
+      ptr = ptr->prox;
+    }
+  }
+  return bytes;
+}
 static Termo *aloca_termo(){
   Termo* novo;
   if(lista_livre == NULL){
@@ -26,8 +38,9 @@ static Termo *aloca_termo(){
     novo = lista_livre;
     lista_livre = lista_livre->prox;
     novo->prox = NULL;
+    bytes_livres -= sizeof(Termo);
   }
-  /*printf("ALOCANDO\nBytes alocados: %lu\n", bytes_alocados);*/
+  fprintf(stdout, "ALOCANDO Bytes alocados: %lu, Bytes livres: %lu\n", bytes_alocados, bytes_livres);
   return novo;
 }
 static void libera_termo(Termo *p){
@@ -35,7 +48,8 @@ static void libera_termo(Termo *p){
   p->exp = 0;
   p->prox = lista_livre;
   lista_livre = p;
-  /*printf("LIBERANDO\nBytes alocados: %lu\n", bytes_alocados);*/
+  bytes_livres += sizeof(Termo);
+  fprintf(stdout, "LIBERANDO Bytes alocados: %lu, Bytes livres: %lu\n", bytes_alocados, bytes_livres);
 }
 
 void libera_lista(){
@@ -237,16 +251,20 @@ Polinomio divide(Polinomio p, Polinomio q){
     exp = dividendo->exp - divisor->exp;
 
     if(exp >= 0){
-      Polinomio liberar[3];
+      Polinomio liberar[4];
 
+      
       adiciona_quociente = cria_monomio(coef, exp);
+      liberar[0] = adiciona_quociente;
+
+      liberar[1] = quociente;
       quociente = soma(quociente, adiciona_quociente);
 
       subtrair = multiplica_por_monomio(divisor, coef, exp);
-      liberar[0] = subtrair, liberar[1] = dividendo, liberar[2] = adiciona_quociente;
+      liberar[2] = subtrair, liberar[3] = dividendo;
       dividendo = subtrai(dividendo, subtrair);
 
-      libera_polinomios(liberar, 3);
+      libera_polinomios(liberar, 4);
     }
   }while(dividendo && exp >= 0);
 
@@ -311,6 +329,7 @@ Polinomio deriva(Polinomio p){
       ptr = ptr->prox;
     }
     p = p->prox;
+
   }
   return head;
 }
@@ -371,7 +390,7 @@ double calcula(Polinomio p, double x){
 void imprime(Polinomio p, FILE *arq){
   int i;
   if(p == NULL){
-    puts("0");
+    fputs("0", arq);
     return;
   }
 

@@ -197,6 +197,8 @@ Polinomio evaluaExpressao(char* infix, Polinomio pols[23]){
             c = resto(a,b);
             break;
         }
+        libera(a);
+        libera(b);
         pilha[tamanho++] = c;
       }
 
