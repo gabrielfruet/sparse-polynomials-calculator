@@ -20,11 +20,9 @@ static Termo *lista_livre = NULL;
 static Termo *aloca_termo(){
   Termo* novo;
   if(lista_livre == NULL){
-    //Caso nenhum elemento esteja livre.
     bytes_alocados += sizeof(Termo);
     novo = malloc(sizeof(Termo));
   }else{
-    //Caso exista elementos ja alocados na lista livre.
     novo = lista_livre;
     lista_livre = lista_livre->prox;
     novo->prox = NULL;
@@ -33,10 +31,8 @@ static Termo *aloca_termo(){
   return novo;
 }
 static void libera_termo(Termo *p){
-  //Resetando os valores.
   p->coef = 0;
   p->exp = 0;
-  //Inserindo no inicio.
   p->prox = lista_livre;
   lista_livre = p;
   /*printf("LIBERANDO\nBytes alocados: %lu\n", bytes_alocados);*/
@@ -52,13 +48,13 @@ void libera_lista(){
 
 static void imprime_polinomio_debug(Polinomio p){
   while(p->prox){
-    printf("{ coef = %lf, exp = %d, prox = %p } -> \n", p->coef, p->exp, p->prox);
+    printf("{ coef = %f, exp = %d, prox = %p } -> \n", p->coef, p->exp, p->prox);
     p = p->prox;
   }
   printf("NULL\n");
 }
 
-//HANDLERS
+/*HANDLERS*/
 static void inverte_sinal(Polinomio p){
   while(p){
     p->coef *= -1;
@@ -76,17 +72,19 @@ static int compara_termo_exp(Termo* p, Termo* q){
 }
 
 static void libera_polinomios(Polinomio v[], int n){
-  for(int i = 0; i < n; i++){
+  int i;
+  for(i = 0; i < n; i++){
     libera(v[i]);
   }
 }
 static Polinomio multiplica_por_monomio(Polinomio p, double coef, int exp){
+  Polinomio head,ptr;
   if(coef == 0.0){
     return NULL;
   }
 
-  Polinomio head = cria_monomio(p->coef * coef, p->exp + exp);
-  Polinomio ptr = head;
+  head = cria_monomio(p->coef * coef, p->exp + exp);
+  ptr = head;
 
   p = p->prox;
   
@@ -377,12 +375,12 @@ void imprime(Polinomio p, FILE *arq){
     }else{
       if(p->coef > 0 && i != 0){
         fprintf(arq, "+ ");
-        fprintf(arq, "%.0lf", p->coef);
+        fprintf(arq, "%.0f", p->coef);
       }else if(p->coef < 0){
         fprintf(arq, "- ");
-        fprintf(arq, "%.0lf", p->coef * -1);
+        fprintf(arq, "%.0f", p->coef * -1);
       }else{
-        fprintf(arq, "%.0lf", p->coef);
+        fprintf(arq, "%.0f", p->coef);
       }
     }
     if(p->exp == 1) {

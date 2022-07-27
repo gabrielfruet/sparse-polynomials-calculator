@@ -31,7 +31,7 @@ Polinomio convertePolinomio(char* str){
 void imprime_baseln(double valor){
   int exp = log10(valor);
   double coef = valor/pow(10, exp);
-  printf("%lfe+%d\n", coef, exp);
+  printf("%fe+%d\n", coef, exp);
 }
 
 int main(){
@@ -63,7 +63,7 @@ int main(){
       case '(':{
         double x = atof(buffer + 2);
         double valor = calcula(*escolhido, x); 
-        printf("%c(%.2lf) = ", buffer[0], x);
+        printf("%c(%.2f) = ", buffer[0], x);
         imprime_baseln(valor);
       }break;
     }

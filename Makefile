@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -c -W -Wall -pedantic -lm
+CFLAGS = -c -W -Wall -pedantic -lm -ansi -U_FORTIFY_SOURCE
 
 all: cliente
 
