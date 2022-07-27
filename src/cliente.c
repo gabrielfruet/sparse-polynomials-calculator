@@ -29,8 +29,8 @@ Polinomio convertePolinomio(char* str){
 }
 
 void imprime_baseln(double valor){
-  int exp = log(valor);
-  double coef = valor/pow(M_E, exp);
+  int exp = log10(valor);
+  double coef = valor/pow(10, exp);
   printf("%lfe+%d\n", coef, exp);
 }
 
@@ -61,8 +61,9 @@ int main(){
         imprime(*escolhido, saida);
       }break;
       case '(':{
-        double x = atoi(buffer + 2);
+        double x = atof(buffer + 2);
         double valor = calcula(*escolhido, x); 
+        printf("%c(%.2lf) = ", buffer[0], x);
         imprime_baseln(valor);
       }break;
     }
