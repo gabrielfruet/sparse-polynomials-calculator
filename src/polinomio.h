@@ -1,4 +1,5 @@
 #ifndef __POLINOMIO_H__
+#define __POLINOMIO_H__
 #include <stdio.h>
 
 void libera_lista();
