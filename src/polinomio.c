@@ -40,7 +40,9 @@ static Termo *aloca_termo(){
     novo->prox = NULL;
     bytes_livres -= sizeof(Termo);
   }
-  fprintf(stdout, "ALOCANDO Bytes alocados: %lu, Bytes livres: %lu\n", bytes_alocados, bytes_livres);
+  #ifdef __BYTES
+    fprintf(stdout, "ALOCANDO Bytes alocados: %lu, Bytes livres: %lu\n", bytes_alocados, bytes_livres);
+  #endif
   return novo;
 }
 static void libera_termo(Termo *p){
@@ -49,7 +51,9 @@ static void libera_termo(Termo *p){
   p->prox = lista_livre;
   lista_livre = p;
   bytes_livres += sizeof(Termo);
-  fprintf(stdout, "LIBERANDO Bytes alocados: %lu, Bytes livres: %lu\n", bytes_alocados, bytes_livres);
+  #ifdef __BYTES
+    fprintf(stdout, "LIBERANDO Bytes alocados: %lu, Bytes livres: %lu\n", bytes_alocados, bytes_livres);
+  #endif
 }
 
 void libera_lista(){
