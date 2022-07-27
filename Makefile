@@ -6,7 +6,7 @@ all: cliente
 clear: bin/
 	rm -rf bin/*.o
 
-cliente: ./bin/polinomio.o ./bin/cliente.o ./bin/calculadora.o
+cliente: ./bin/ ./bin/polinomio.o ./bin/cliente.o ./bin/calculadora.o
 	$(CC) -o cliente ./bin/cliente.o ./bin/polinomio.o ./bin/calculadora.o -lm
 
 ./bin/cliente.o: ./src/cliente.c ./src/polinomio.h
@@ -17,3 +17,6 @@ cliente: ./bin/polinomio.o ./bin/cliente.o ./bin/calculadora.o
 
 ./bin/calculadora.o: ./src/calculadora.c ./src/calculadora.h
 	$(CC) -o ./bin/calculadora.o ./src/calculadora.c $(CFLAGS)
+
+./bin/:
+	mkdir bin

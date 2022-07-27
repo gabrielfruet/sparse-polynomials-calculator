@@ -1,4 +1,3 @@
-./bin/cliente.o
-./bin/polinomio.o
+bin
 cliente
 bytes.log
