@@ -1,4 +1,4 @@
-# EP2 - Sparse Polynomials
+# EP2 - Sparse Polynomials IME-USP
 
 Data structures project to implement a Polynomials calculator in C, using linked lists, stacks, dynamic memory allocation and free lists.
 
