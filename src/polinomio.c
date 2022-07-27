@@ -428,12 +428,10 @@ void imprime(Polinomio p, FILE *arq){
 }
     
 void libera(Polinomio p){
-  if(p != NULL){
-    while(p != NULL){
-      Polinomio libera = p;
-      p = p->prox;
-      libera_termo(libera);
-    }
+  while(p != NULL){
+    Polinomio libera = p;
+    p = p->prox;
+    libera_termo(libera);
   }
 }
 
