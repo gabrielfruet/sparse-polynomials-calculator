@@ -101,6 +101,7 @@ char* infixoParaPosfixo(char* expr){
   int i;
   Pilha p = cria_pilha();
   Pilha posf = cria_pilha();
+  char* out;
   
   for(i = 0; expr[i]; ++i){
 
@@ -140,21 +141,22 @@ char* infixoParaPosfixo(char* expr){
   empilha(posf, expr[i]);
   /*printf("%s\n", posf->vetor); */
   libera_pilha(p);
-  char* out = posf->vetor;
+  out = posf->vetor;
   free(posf);
   return out;
 }
 
 Polinomio evaluaExpressao(char* infix, Polinomio pols[23]){
   char* posfix = infixoParaPosfixo(infix);
+  int i, tamanho;
   Polinomio pilha[100];
 
-  for(int i = 0; i < 100; i++)
+  for(i = 0; i < 100; i++)
     pilha[i] = NULL;
 
-  int tamanho = 0;
+  tamanho = 0;
 
-  for(int i = 0; posfix[i] && posfix[i] != '\n'; i++){
+  for(i = 0; posfix[i] && posfix[i] != '\n'; i++){
     char ch = posfix[i];
 
     if(eOperador(ch)){

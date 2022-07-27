@@ -46,21 +46,15 @@ void libera_lista(){
   }
 }
 
-static void imprime_polinomio_debug(Polinomio p){
-  while(p->prox){
-    printf("{ coef = %f, exp = %d, prox = %p } -> \n", p->coef, p->exp, p->prox);
-    p = p->prox;
-  }
-  printf("NULL\n");
-}
+/*static void imprime_polinomio_debug(Polinomio p){*/
+  /*while(p->prox){*/
+    /*printf("{ coef = %f, exp = %d, prox = %p } -> \n", p->coef, p->exp, p->prox);*/
+    /*p = p->prox;*/
+  /*}*/
+  /*printf("NULL\n");*/
+/*}*/
 
 /*HANDLERS*/
-static void inverte_sinal(Polinomio p){
-  while(p){
-    p->coef *= -1;
-    p = p->prox;
-  }
-}
 static int compara_termo_exp(Termo* p, Termo* q){
   if(!p){
     return q->exp;
@@ -98,6 +92,7 @@ static Polinomio multiplica_por_monomio(Polinomio p, double coef, int exp){
 }
 
 static Polinomio soma_ou_subtrai(Polinomio p, Polinomio q, int operacao){
+  Polinomio head,ptr;
   if(!p || !q){
     if(p)
       return copia(p);
@@ -108,8 +103,8 @@ static Polinomio soma_ou_subtrai(Polinomio p, Polinomio q, int operacao){
     return NULL;
   }
 
-  Polinomio head = NULL;
-  Polinomio ptr = NULL;
+  head = NULL;
+  ptr = NULL;
 
   while(head == NULL && (p || q)){
     if(compara_termo_exp(p, q) > 0){
@@ -161,23 +156,25 @@ static Polinomio soma_ou_subtrai(Polinomio p, Polinomio q, int operacao){
 }
 
 Termo* deriva_termo(Termo* t){
+  Termo* derivado;
   if(t == NULL || t->exp == 0){
     return NULL;
   }
 
-  Termo* derivado = aloca_termo();
+  derivado = aloca_termo();
   derivado->coef = t->coef * t->exp;
   derivado->exp = t->exp - 1;
 
   return derivado;
 }
 
-//INTERFACE
+/*INTERFACE*/
 Polinomio cria_monomio(double coef, int exp){
+  Polinomio novo;
   if(coef == 0){
     return NULL;
   }
-  Polinomio novo = aloca_termo();
+  novo = aloca_termo();
   novo->exp = exp;
   novo->coef = coef;
   novo->prox = NULL;
@@ -193,6 +190,8 @@ Polinomio subtrai(Polinomio p, Polinomio q){
 }
 
 Polinomio multiplica(Polinomio p, Polinomio q){
+  Polinomio head = NULL, temp = NULL, multiplicado = NULL;
+
   if(!p || !q){
     if(p)
       return copia(p);
@@ -203,16 +202,13 @@ Polinomio multiplica(Polinomio p, Polinomio q){
     return NULL;
   }
 
-  Polinomio head = NULL;
-  Polinomio temp = NULL;
-  Polinomio multiplicado = NULL;
-
   while(q){
+    Polinomio liberar[3];
 
     temp = copia(p);
     multiplicado = multiplica_por_monomio(temp, q->coef, q->exp);
     
-    Polinomio liberar[] = {head, temp, multiplicado};
+    liberar[0] = head, liberar[1] = temp, liberar[2] = multiplicado;
 
     head = soma(head, multiplicado);
 
@@ -224,29 +220,30 @@ Polinomio multiplica(Polinomio p, Polinomio q){
   return head;
 }
 Polinomio divide(Polinomio p, Polinomio q){
+  Polinomio dividendo, divisor, quociente, subtrair, adiciona_quociente;
+  double coef;
+  int exp;
+
   if(!p || !q){
     return NULL;
   }
 
-  Polinomio dividendo = copia(p);
-  Polinomio divisor = q;
-  Polinomio quociente = NULL;
-  Polinomio subtrair = NULL;
-  Polinomio adiciona_quociente = NULL;
-  double coef;
-  int exp;
+  dividendo = copia(p);
+  divisor = q;
+  quociente = NULL, subtrair = NULL, adiciona_quociente = NULL;
 
   do{
     coef = dividendo->coef/divisor->coef;
     exp = dividendo->exp - divisor->exp;
 
     if(exp >= 0){
+      Polinomio liberar[3];
 
       adiciona_quociente = cria_monomio(coef, exp);
       quociente = soma(quociente, adiciona_quociente);
 
       subtrair = multiplica_por_monomio(divisor, coef, exp);
-      Polinomio liberar[] = { subtrair, dividendo, adiciona_quociente};
+      liberar[0] = subtrair, liberar[1] = dividendo, liberar[2] = adiciona_quociente;
       dividendo = subtrai(dividendo, subtrair);
 
       libera_polinomios(liberar, 3);
@@ -257,23 +254,28 @@ Polinomio divide(Polinomio p, Polinomio q){
 }
 
 Polinomio resto(Polinomio p, Polinomio q){
+  Polinomio resto, divisor, subtrair;
+  double coef;
+  int exp;
+
   if(!p || !q){
     return NULL;
   }
 
-  Polinomio resto = copia(p);
-  Polinomio divisor = q;
-  Polinomio subtrair = NULL;
-  double coef;
-  int exp;
+  resto = copia(p);
+  divisor = q;
+  subtrair = NULL;
 
   do{
     coef = resto->coef/divisor->coef;
     exp = resto->exp - divisor->exp;
 
     if(exp >= 0){
+      Polinomio liberar[2];
+
       subtrair = multiplica_por_monomio(divisor, coef, exp);
-      Polinomio liberar[] = { subtrair, resto};
+      liberar[0] = subtrair, liberar[1] = resto;
+
       resto = subtrai(resto, subtrair);
 
       libera_polinomios(liberar, 2);
@@ -284,17 +286,21 @@ Polinomio resto(Polinomio p, Polinomio q){
 }
 
 Polinomio deriva(Polinomio p){
+  Termo* termo;
+  Polinomio head,ptr;
+
   if(!p){
     return NULL;
   }
 
-  Termo* termo = deriva_termo(p);
+  termo = deriva_termo(p);
+
   if(!termo){
     return NULL;
   }
 
-  Polinomio head = termo;
-  Polinomio ptr = head;
+  head = termo;
+  ptr = head;
   p = p->prox;
   while(p){
 
@@ -323,16 +329,18 @@ Polinomio oposto(Polinomio p){
 }
 
 Polinomio copia(Polinomio p){
+  Polinomio inicio, ponteiro;
+
   if(p == NULL){
     return NULL;
   }
-  Polinomio inicio = aloca_termo(); 
+  inicio = aloca_termo(); 
   inicio->coef = p->coef;
   inicio->exp = p->exp;
   
   p = p->prox;
 
-  Polinomio ponteiro = inicio;
+  ponteiro = inicio;
 
   while(p != NULL){
 
@@ -361,12 +369,13 @@ double calcula(Polinomio p, double x){
 }
 
 void imprime(Polinomio p, FILE *arq){
+  int i;
   if(p == NULL){
     puts("0");
     return;
   }
 
-  for(int i = 0; p != NULL; i++){
+  for(i = 0; p != NULL; i++){
 
     if(p->coef == 1 && p->exp != 0 && i != 0){
       fprintf(arq, "+ "); 

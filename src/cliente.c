@@ -7,22 +7,28 @@
 #include "calculadora.h"
 
 Polinomio convertePolinomio(char* str){
+  int i, j;
   Polinomio novo = NULL;
   Polinomio monomio = NULL;
   int tamanho = atoi(strtok(str, " "));
-  for(int i = 0; i < tamanho; i++){
+  for(i = 0; i < tamanho; i++){
 
-    int coef,exp;
-    coef = atoi(strtok(NULL, " "));
+    double coef;
+    int exp;
+
+    Polinomio liberar[2];
+
+    coef = atof(strtok(NULL, " "));
     exp = atoi(strtok(NULL, " "));
 
-    Polinomio liberar[] = {novo, monomio};
+    liberar[0] = novo, liberar[1] = monomio;
 
     monomio = cria_monomio(coef, exp);
+    
     novo = soma(novo, monomio);
 
-    for(int i = 0; i < 2; i++){
-      libera(liberar[i]);
+    for(j = 0; j < 2; j++){
+      libera(liberar[j]);
     }
   }
   return novo;
@@ -39,9 +45,9 @@ int main(){
   Polinomio pols[23];
   FILE* saida = stdout;
   FILE* entrada = fopen("./comandos.txt", "r");
+  char buffer[255];
 
   memset(pols, 0, sizeof(Polinomio)*23);
-  char buffer[255];
   while(fgets(buffer,255,entrada) != NULL){
     Polinomio* escolhido = &pols[buffer[0] - 'a'];
     switch(buffer[1]){
@@ -71,4 +77,5 @@ int main(){
 
   printf("Finalizando.");
   libera_lista();
+  return 0;
 }
