@@ -138,7 +138,7 @@ char* infixoParaPosfixo(char* expr){
   }
 
   empilha(posf, expr[i]);
-  printf("%s\n", posf->vetor); 
+  /*printf("%s\n", posf->vetor); */
   libera_pilha(p);
   char* out = posf->vetor;
   free(posf);
@@ -171,8 +171,8 @@ Polinomio evaluaExpressao(char* infix, Polinomio pols[23]){
             b = oposto(a);
             break;
         }
-
         libera(a);
+        pilha[tamanho++] = b;
       }else{
         Polinomio a = NULL, b = NULL, c = NULL;
         b = pilha[--tamanho];
@@ -195,24 +195,24 @@ Polinomio evaluaExpressao(char* infix, Polinomio pols[23]){
             c = resto(a,b);
             break;
         }
-        imprime(a, stdout);
-        printf("%c\n", ch);
-        imprime(b, stdout);
-        printf("=\n");
-        imprime(c, stdout);
-        libera(a);
-        libera(b);
+        /*imprime(a, stdout);*/
+        /*printf("%c\n", ch);*/
+        /*imprime(b, stdout);*/
+        /*printf("=\n");*/
+        /*imprime(c, stdout);*/
+        /*libera(a);*/
+        /*libera(b);*/
         pilha[tamanho++] = c;
       }
 
     }else{
       pilha[tamanho++] = copia(pols[tolower(ch) - 'a']);
     }
-    for(int i = 0; i < tamanho; i++){
-      imprime(pilha[i], stdout);
-    }
-    puts("---------------");
-    printf("tamanho: %d\n", tamanho);
+    /*for(int i = 0; i < tamanho; i++){*/
+      /*imprime(pilha[i], stdout);*/
+    /*}*/
+    /*puts("---------------");*/
+    /*printf("tamanho: %d\n", tamanho);*/
   }
   free(posfix);
   return pilha[0];

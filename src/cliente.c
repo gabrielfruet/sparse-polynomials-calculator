@@ -52,9 +52,12 @@ int main(){
       case ':':{
         libera(*escolhido);
         *escolhido = convertePolinomio(buffer + 2);      
+        printf("%c(x) = ", buffer[0]);
+        imprime(*escolhido, saida);
       }break;
       case '=':{
         *escolhido = evaluaExpressao(buffer + 2, pols);
+        printf("%c(x) = ", buffer[0]);
         imprime(*escolhido, saida);
       }break;
       case '(':{

@@ -110,7 +110,7 @@ static Polinomio soma_ou_subtrai(Polinomio p, Polinomio q, int operacao){
       head = cria_monomio(q->coef * operacao, q->exp);
       q = q->prox;
     }else if(compara_termo_exp(p, q) == 0){
-      head = cria_monomio(p->coef - q->coef, q->exp);
+      head = cria_monomio(p->coef + (operacao*q->coef), q->exp);
       p = p->prox;
       q = q->prox;
     }
@@ -130,7 +130,7 @@ static Polinomio soma_ou_subtrai(Polinomio p, Polinomio q, int operacao){
       q = q->prox;
     }
     if(p && q && compara_termo_exp(p, q) == 0){
-      ptr->prox = cria_monomio(p->coef - q->coef, q->exp);
+      ptr->prox = cria_monomio(p->coef + (operacao*q->coef), q->exp);
       if(ptr->prox != NULL){
         ptr = ptr->prox;
       }
